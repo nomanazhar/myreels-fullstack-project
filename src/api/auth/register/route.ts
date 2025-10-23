@@ -5,12 +5,12 @@ import  User  from "../../../models/user";
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    const { name, email, password } = await request.json();
+    const { username, email, password } = await request.json();
 
     // Basic validation
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
       return NextResponse.json(
-        { message: "All fields are required" },
+        { message: "All fields are required" },   
         { status: 400 }
       );
     }
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }       
 
     // Create a new user
-    const newUser = await User.create({ name, email, password });
+    const newUser = await User.create({ username, email, password });
     if (newUser) {
       return NextResponse.json(
         { message: "User registered successfully" },
