@@ -12,7 +12,7 @@ export async function GET() {
     await dbConnect();
     const videos = await video.find({
     // Add your query conditions here 
-     }).sort({ createdAt: -1 });
+     }).sort({ createdAt: -1 }).lean();
 
      if(!videos || videos.length === 0  ) {
         return NextResponse.json({ message: "No videos found" }, { status: 404 });
@@ -25,7 +25,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
    try {
-     const session = await getServerSession(authOptions); 
+     const session = await getServerSession(authOptions);
  
      if (!session) {
          return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -40,12 +40,14 @@ export async function POST(request: Request) {
          ...body,
          uploader: user._id,
          transformations: {
-             height: body.transformations?.height || 720,
-             width: body.transformations?.width || 1280,
-             quality: body.transformations?.quality || 80,
+             height: 1920,
+             width: 1080,
+             quality: body.transformations?.quality ?? 90,
          }
      };
      const newVideo = await Video.create(videodata);
+
+        return NextResponse.json(newVideo, { status: 201 });
    } catch (error) {
         console.error("Error creating video:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
