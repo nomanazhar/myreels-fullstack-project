@@ -25,7 +25,6 @@ export async function GET() {
          ...authenticateparameters,
          publicKey: process.env.IMAGEKIT_PUBLIC_KEY })
    } catch (error) {
-        console.error("Error generating upload auth parameters:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
    }
 }
